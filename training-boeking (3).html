@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Training inschrijving – Planning To Succes</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--teal:#28BEC7;--teal-dark:#1a9ea6;--green-bg:#E1F5EE;--green-text:#0F6E56;--amber-bg:#FAEEDA;--amber-text:#854F0B;--gray-bg:#F1EFE8;--gray-text:#5F5E5A;--red-bg:#FCEBEB;--red-text:#A32D2D;--bg:#f5f5f3;--surface:#ffffff;--border:rgba(0,0,0,0.1);--border-strong:rgba(0,0,0,0.18);--text:#1a1a1a;--text-sec:#6b6b68;--radius:12px;--radius-sm:8px;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;line-height:1.5}
+header{background:var(--surface);border-bottom:0.5px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-name{font-size:15px;font-weight:500;color:var(--text)}
+.logo-name span{color:var(--teal)}
+main{max-width:780px;margin:0 auto;padding:2rem 1.5rem 4rem}
+.page-title{font-size:26px;font-weight:500;letter-spacing:-0.02em;margin-bottom:4px}
+.page-sub{font-size:14px;color:var(--text-sec);margin-bottom:2rem}
+.topbar{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem}
+.date-group{margin-bottom:1.75rem}
+.date-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--text-sec);margin-bottom:.6rem;padding-bottom:.5rem;border-bottom:0.5px solid var(--border)}
+.slot-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.slot{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:.9rem 1.1rem;cursor:pointer;transition:border-color .15s;user-select:none}
+.slot:hover:not(.full){border-color:var(--teal)}
+.slot.selected{border:1.5px solid var(--teal);box-shadow:0 0 0 3px rgba(40,190,199,.12)}
+.slot.full{opacity:.5;cursor:not-allowed}
+.slot-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.slot-time{font-size:15px;font-weight:500}
+.badge{font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px}
+.badge-open{background:var(--green-bg);color:var(--green-text)}
+.badge-few{background:var(--amber-bg);color:var(--amber-text)}
+.badge-full{background:var(--gray-bg);color:var(--gray-text)}
+.spots-bar{height:3px;background:var(--gray-bg);border-radius:2px;overflow:hidden}
+.spots-fill{height:3px;border-radius:2px;transition:width .3s}
+.book-form{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.25rem 1.5rem;margin-top:1.5rem}
+.book-form h3{font-size:16px;font-weight:500;margin-bottom:1rem}
+.form-row{margin-bottom:12px}
+label{font-size:13px;color:var(--text-sec);display:block;margin-bottom:4px}
+input[type=text],input[type=password],select{width:100%;padding:9px 12px;font-size:14px;border:0.5px solid var(--border-strong);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);outline:none;transition:border-color .15s}
+input:focus,select:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(40,190,199,.12)}
+.btn-row{display:flex;gap:8px;align-items:center;margin-top:4px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:8px 18px;border-radius:var(--radius-sm);font-size:14px;font-weight:500;cursor:pointer;border:0.5px solid var(--border-strong);background:transparent;color:var(--text);transition:background .12s}
+.btn:hover{background:var(--gray-bg)}
+.btn-primary{background:var(--teal);color:#fff;border-color:var(--teal)}
+.btn-primary:hover{background:var(--teal-dark)}
+.btn-danger{background:var(--red-bg);color:var(--red-text);border-color:var(--red-text)}
+.btn-sm{padding:5px 12px;font-size:13px}
+.msg{font-size:13px;margin-top:10px;padding:8px 12px;border-radius:var(--radius-sm)}
+.msg-ok{background:var(--green-bg);color:var(--green-text)}
+.msg-err{background:var(--red-bg);color:var(--red-text)}
+.msg-info{background:var(--gray-bg);color:var(--gray-text)}
+.panel{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.25rem 1.5rem;margin-bottom:1.25rem}
+.panel-title{font-size:16px;font-weight:500;display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.tabs{display:flex;gap:4px;border-bottom:0.5px solid var(--border);margin-bottom:1rem}
+.tab{padding:6px 14px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:none;color:var(--text-sec);border-bottom:2px solid transparent;margin-bottom:-0.5px}
+.tab.active{color:var(--teal);border-bottom-color:var(--teal)}
+.summary-bar{display:flex;gap:1.5rem;margin-bottom:1rem;padding-bottom:.75rem;border-bottom:0.5px solid var(--border);flex-wrap:wrap}
+.stat{font-size:13px;color:var(--text-sec)}
+.stat strong{color:var(--text);font-weight:500}
+.admin-slot-row{display:flex;align-items:center;justify-content:space-between;padding:.6rem 0;border-bottom:0.5px solid var(--border);gap:8px}
+.admin-slot-row:last-child{border-bottom:none}
+.admin-slot-info{font-size:13px;font-weight:500;color:var(--text)}
+.admin-slot-sub{font-size:12px;color:var(--text-sec)}
+.booking-name{display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--text-sec);padding:2px 0}
+.del-btn{background:none;border:none;color:var(--text-sec);cursor:pointer;font-size:18px;padding:0 4px;line-height:1}
+.del-btn:hover{color:var(--red-text)}
+.empty-msg{font-size:13px;color:var(--text-sec);font-style:italic}
+.login-row{display:flex;gap:8px;align-items:flex-end;max-width:320px;margin-top:8px}
+.login-row input{flex:1}
+.loading{text-align:center;padding:3rem 0;color:var(--text-sec);font-size:14px}
+.spinner{display:inline-block;width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--teal);border-radius:50%;animation:spin .7s linear infinite;margin-right:8px;vertical-align:-4px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.add-slot-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+.empty-state{text-align:center;padding:2rem;color:var(--text-sec);font-size:14px;border:0.5px dashed var(--border-strong);border-radius:var(--radius)}
+@media(max-width:560px){.add-slot-grid{grid-template-columns:1fr}.slot-grid{grid-template-columns:1fr}header{padding:1rem}main{padding:1.25rem 1rem 3rem}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">
+    <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+      <polygon points="16,2 28,9 28,23 16,30 4,23 4,9" fill="#28BEC7" opacity=".15"/>
+      <polygon points="16,5 25.5,10.5 25.5,21.5 16,27 6.5,21.5 6.5,10.5" fill="none" stroke="#28BEC7" stroke-width="1.5"/>
+      <polygon points="16,10 21,13 21,19 16,22 11,19 11,13" fill="#28BEC7"/>
+    </svg>
+    <span class="logo-name">Planning To <span>Succes</span></span>
+  </div>
+  <button class="btn btn-sm" id="adminBtn" onclick="toggleAdmin()">&#128274; Beheerder</button>
+</header>
+
+<main>
+  <div class="topbar">
+    <div>
+      <h1 class="page-title">Training inschrijving</h1>
+      <p class="page-sub">Kies een tijdslot en schrijf je in. Maximaal 4 deelnemers per sessie.</p>
+    </div>
+  </div>
+
+  <div id="adminLoginArea" style="display:none" class="panel">
+    <div class="panel-title">Beheerdersweergave</div>
+    <label>Wachtwoord</label>
+    <div class="login-row">
+      <input type="password" id="adminPw" placeholder="••••••" onkeydown="if(event.key==='Enter')checkAdmin()" />
+      <button class="btn btn-primary" onclick="checkAdmin()">Inloggen</button>
+    </div>
+    <div id="adminLoginMsg"></div>
+  </div>
+
+  <div id="adminDashboard" style="display:none">
+    <div class="panel">
+      <div class="panel-title">
+        Beheerder
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-sm" onclick="refreshAll()">&#8635; Verversen</button>
+          <button class="btn btn-sm" onclick="logoutAdmin()">Uitloggen</button>
+        </div>
+      </div>
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab('bookings')" id="tab-bookings">Boekingen</button>
+        <button class="tab" onclick="switchTab('slots')" id="tab-slots">Tijdsloten beheren</button>
+      </div>
+      <div id="tabBookings">
+        <div class="summary-bar" id="summaryBar"></div>
+        <div id="adminSlots"></div>
+      </div>
+      <div id="tabSlots" style="display:none">
+        <div style="font-size:13px;font-weight:500;margin-bottom:8px">Tijdslot toevoegen</div>
+        <div class="add-slot-grid">
+          <div><label>Dag</label>
+            <select id="newDay">
+              <option>Maandag</option><option>Dinsdag</option><option>Woensdag</option>
+              <option>Donderdag</option><option>Vrijdag</option>
+            </select>
+          </div>
+          <div><label>Datum (bijv. 15 juni)</label><input type="text" id="newDate" placeholder="15 juni" /></div>
+          <div><label>Tijd (bijv. 10:00&#8211;11:00)</label><input type="text" id="newTime" placeholder="10:00&#8211;11:00" /></div>
+        </div>
+        <button class="btn btn-primary" onclick="addSlot()">+ Toevoegen</button>
+        <div id="addSlotMsg"></div>
+        <div style="font-size:13px;font-weight:500;margin-top:1.25rem;margin-bottom:8px">Huidige tijdsloten</div>
+        <div id="manageSlotsList"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="slotsContainer"><div class="loading"><span class="spinner"></span>Boekingen ophalen&#8230;</div></div>
+
+  <div class="book-form" id="bookForm" style="display:none">
+    <h3 id="formTitle">Inschrijven</h3>
+    <div class="form-row">
+      <label>Jouw naam</label>
+      <input type="text" id="nameInput" placeholder="Voornaam achternaam" maxlength="60" onkeydown="if(event.key==='Enter')submitBooking()" />
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="submitBooking()">&#10003; Inschrijven</button>
+      <button class="btn" onclick="cancelForm()">Annuleren</button>
+    </div>
+    <div id="bookMsg"></div>
+  </div>
+</main>
+
+<script>
+const SCRIPT_URL="https://script.google.com/macros/s/AKfycbxTO0no8NHk3x9OfpFfdrHpbLWaWZpH47Aaoode-c7Zys9V7ZwcL3xloZMFC8UPgoUKXw/exec";
+const ADMIN_PW="pts2025";
+const MAX=4;
+let slots=[],bookings={},selectedSlot=null,adminLoggedIn=false;
+
+function groupByDate(){const g={};for(const s of slots){const k=s.day+" "+s.date;if(!g[k])g[k]=[];g[k].push(s);}return g;}
+function badge(count){const l=MAX-count;if(count>=MAX)return`<span class="badge badge-full">Vol</span>`;if(l===1)return`<span class="badge badge-few">Nog 1 plek</span>`;return`<span class="badge badge-open">${l} plekken vrij</span>`;}
+function fillColor(c){if(c>=MAX)return"#888780";if(c>=MAX-1)return"#EF9F27";return"#1D9E75";}
+
+function renderSlots(){
+  if(slots.length===0){document.getElementById("slotsContainer").innerHTML=`<div class="empty-state">Er zijn nog geen tijdsloten beschikbaar.</div>`;return;}
+  const groups=groupByDate();let html="";
+  for(const [label,sg] of Object.entries(groups)){
+    html+=`<div class="date-group"><div class="date-label">${label}</div><div class="slot-grid">`;
+    for(const s of sg){
+      const count=(bookings[s.id]||[]).length,full=count>=MAX,sel=selectedSlot===s.id?" selected":"",fw=Math.round((count/MAX)*100);
+      html+=`<div class="slot${full?" full":""}${sel}" onclick="selectSlot('${s.id}',${full})"><div class="slot-top"><span class="slot-time">${s.time}</span>${badge(count)}</div><div class="spots-bar"><div class="spots-fill" style="width:${fw}%;background:${fillColor(count)}"></div></div></div>`;
+    }
+    html+=`</div></div>`;
+  }
+  document.getElementById("slotsContainer").innerHTML=html;
+}
+
+async function apiRead(){try{const r=await fetch(SCRIPT_URL+"?action=read");return JSON.parse(await r.text());}catch{return{};}}
+async function apiWrite(data){try{const r=await fetch(`${SCRIPT_URL}?action=write&data=${encodeURIComponent(JSON.stringify(data))}`);return JSON.parse(await r.text());}catch{return{ok:false};}}
+
+async function loadAll(){
+  try{const data=await apiRead();slots=Array.isArray(data.slots)?data.slots:[];bookings=data.bookings||{};}
+  catch{slots=[];bookings={};}
+  renderSlots();
+  if(adminLoggedIn){renderAdmin();renderManageSlots();}
+}
+
+function selectSlot(id,full){
+  if(full)return;selectedSlot=id;renderSlots();
+  const s=slots.find(x=>x.id===id);
+  document.getElementById("formTitle").textContent=`Inschrijven: ${s.day} ${s.date}, ${s.time}`;
+  document.getElementById("bookForm").style.display="block";
+  document.getElementById("bookForm").scrollIntoView({behavior:"smooth",block:"nearest"});
+  document.getElementById("nameInput").focus();
+  document.getElementById("bookMsg").innerHTML="";document.getElementById("nameInput").value="";
+}
+function cancelForm(){selectedSlot=null;renderSlots();document.getElementById("bookForm").style.display="none";}
+
+async function submitBooking(){
+  const name=document.getElementById("nameInput").value.trim();
+  const msg=document.getElementById("bookMsg");
+  if(!name){msg.innerHTML=`<div class="msg msg-err">Vul je naam in.</div>`;return;}
+  if(!selectedSlot)return;
+  msg.innerHTML=`<div class="msg msg-info"><span class="spinner"></span>Bezig met opslaan&#8230;</div>`;
+  const fresh=await apiRead();
+  slots=Array.isArray(fresh.slots)?fresh.slots:slots;bookings=fresh.bookings||{};
+  const list=bookings[selectedSlot]||[];
+  if(list.length>=MAX){msg.innerHTML=`<div class="msg msg-err">Dit tijdslot is inmiddels vol.</div>`;renderSlots();return;}
+  if(list.find(n=>n.toLowerCase()===name.toLowerCase())){msg.innerHTML=`<div class="msg msg-err">Je staat al ingeschreven voor dit tijdslot.</div>`;return;}
+  list.push(name);bookings[selectedSlot]=list;
+  const result=await apiWrite({slots,bookings});
+  if(result&&result.ok){
+    msg.innerHTML=`<div class="msg msg-ok">&#10003; Gelukt! Je bent ingeschreven.</div>`;
+    renderSlots();setTimeout(cancelForm,2200);
+  }else{
+    list.pop();bookings[selectedSlot]=list;
+    msg.innerHTML=`<div class="msg msg-err">Opslaan mislukt. Probeer het opnieuw.</div>`;
+  }
+}
+
+function toggleAdmin(){
+  if(adminLoggedIn){const d=document.getElementById("adminDashboard");d.style.display=d.style.display==="none"?"block":"none";}
+  else{const l=document.getElementById("adminLoginArea");l.style.display=l.style.display==="none"?"block":"none";if(l.style.display==="block")setTimeout(()=>document.getElementById("adminPw").focus(),50);}
+}
+function checkAdmin(){
+  if(document.getElementById("adminPw").value===ADMIN_PW){
+    adminLoggedIn=true;
+    document.getElementById("adminLoginArea").style.display="none";
+    document.getElementById("adminDashboard").style.display="block";
+    document.getElementById("adminBtn").textContent="&#128187; Beheerder";
+    renderAdmin();renderManageSlots();
+  }else{document.getElementById("adminLoginMsg").innerHTML=`<div class="msg msg-err">Onjuist wachtwoord.</div>`;}
+}
+function logoutAdmin(){
+  adminLoggedIn=false;
+  document.getElementById("adminDashboard").style.display="none";
+  document.getElementById("adminBtn").textContent="&#128274; Beheerder";
+  document.getElementById("adminPw").value="";
+}
+async function refreshAll(){await loadAll();}
+function switchTab(tab){
+  document.getElementById("tabBookings").style.display=tab==="bookings"?"block":"none";
+  document.getElementById("tabSlots").style.display=tab==="slots"?"block":"none";
+  document.getElementById("tab-bookings").className="tab"+(tab==="bookings"?" active":"");
+  document.getElementById("tab-slots").className="tab"+(tab==="slots"?" active":"");
+}
+
+async function addSlot(){
+  const day=document.getElementById("newDay").value;
+  const date=document.getElementById("newDate").value.trim();
+  const time=document.getElementById("newTime").value.trim();
+  const msg=document.getElementById("addSlotMsg");
+  if(!date||!time){msg.innerHTML=`<div class="msg msg-err">Vul datum en tijd in.</div>`;return;}
+  const id="s"+Date.now();
+  slots.push({id,day,date,time});bookings[id]=[];
+  msg.innerHTML=`<div class="msg msg-info"><span class="spinner"></span>Opslaan&#8230;</div>`;
+  const result=await apiWrite({slots,bookings});
+  if(result&&result.ok){
+    msg.innerHTML=`<div class="msg msg-ok">&#10003; Tijdslot toegevoegd.</div>`;
+    document.getElementById("newDate").value="";document.getElementById("newTime").value="";
+    renderSlots();renderManageSlots();renderAdmin();
+    setTimeout(()=>msg.innerHTML="",2500);
+  }else{
+    slots.pop();delete bookings[id];
+    msg.innerHTML=`<div class="msg msg-err">Opslaan mislukt.</div>`;
+  }
+}
+
+async function removeSlot(id){
+  const names=bookings[id]||[];
+  if(names.length>0&&!confirm(`Dit tijdslot heeft ${names.length} inschrijving(en). Weet je zeker dat je het wil verwijderen?`))return;
+  slots=slots.filter(x=>x.id!==id);delete bookings[id];
+  if(selectedSlot===id)cancelForm();
+  const result=await apiWrite({slots,bookings});
+  if(result&&result.ok){renderSlots();renderManageSlots();renderAdmin();}
+  else alert("Verwijderen mislukt.");
+}
+
+async function deleteBooking(slotId,encodedName){
+  const name=decodeURIComponent(encodedName);
+  bookings[slotId]=(bookings[slotId]||[]).filter(n=>n!==name);
+  await apiWrite({slots,bookings});renderSlots();renderAdmin();
+}
+
+function renderAdmin(){
+  let total=0,html="";
+  for(const s of slots){
+    const list=bookings[s.id]||[];total+=list.length;
+    html+=`<div style="padding:.6rem 0;border-bottom:0.5px solid var(--border)"><div style="font-size:13px;font-weight:500;margin-bottom:3px">${s.day} ${s.date} &middot; ${s.time} <span style="font-weight:400;color:var(--text-sec)">(${list.length}/${MAX})</span></div>`;
+    if(list.length===0)html+=`<span class="empty-msg">Nog geen inschrijvingen</span>`;
+    else for(const name of list)html+=`<div class="booking-name"><span>${name}</span><button class="del-btn" onclick="deleteBooking('${s.id}','${encodeURIComponent(name)}')">&times;</button></div>`;
+    html+=`</div>`;
+  }
+  if(slots.length===0)html=`<span class="empty-msg">Nog geen tijdsloten aangemaakt.</span>`;
+  document.getElementById("summaryBar").innerHTML=`<span class="stat">Ingeschreven: <strong>${total}</strong></span><span class="stat">Sessies: <strong>${slots.length}</strong></span><span class="stat">Capaciteit: <strong>${slots.length*MAX}</strong></span>`;
+  document.getElementById("adminSlots").innerHTML=html;
+}
+
+function renderManageSlots(){
+  if(slots.length===0){document.getElementById("manageSlotsList").innerHTML=`<div class="empty-state">Nog geen tijdsloten. Voeg er hierboven een toe.</div>`;return;}
+  let html="";
+  for(const s of slots){
+    const count=(bookings[s.id]||[]).length;
+    html+=`<div class="admin-slot-row"><div><div class="admin-slot-info">${s.day} ${s.date} &middot; ${s.time}</div><div class="admin-slot-sub">${count}/${MAX} ingeschreven</div></div><button class="btn btn-sm btn-danger" onclick="removeSlot('${s.id}')">&#128465; Verwijderen</button></div>`;
+  }
+  document.getElementById("manageSlotsList").innerHTML=html;
+}
+
+setInterval(()=>loadAll(),30000);
+loadAll();
+</script>
+</body>
+</html>
